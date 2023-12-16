@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
+  static List<Icon> scoreKeeper = [];
+
   const HomePage({super.key});
 
   @override
@@ -30,7 +32,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Icon> scoreKeeper = [];
+  void checkAnswer(bool userPickedAnswer) {
+    bool correctAnswer = quiz.getCorrectAnswer();
+
+    if (correctAnswer == userPickedAnswer) {
+      HomePage.scoreKeeper.add(const Icon(
+        Icons.check,
+        color: Colors.green,
+      ));
+    } else {
+      HomePage.scoreKeeper.add(const Icon(
+        Icons.close,
+        color: Colors.red,
+      ));
+    }
+    setState(() {
+      quiz.nextQuestion();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +83,7 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                     onPressed: () {
-                      if (quiz.getCorrectAnswer() == true) {
-                      } else {}
-                      setState(() {
-                        quiz.nextQuestion();
-                      });
+                      checkAnswer(true);
                     },
                     child: const Text('True'),
                   ),
@@ -86,18 +101,14 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                     onPressed: () {
-                      if (quiz.getCorrectAnswer() == false) {
-                      } else {}
-                      setState(() {
-                        quiz.nextQuestion();
-                      });
+                      checkAnswer(false);
                     },
                     child: const Text('False'),
                   ),
                 ),
               ),
               Row(
-                children: scoreKeeper,
+                children: HomePage.scoreKeeper,
               )
             ],
           ),
